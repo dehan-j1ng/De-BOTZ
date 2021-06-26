@@ -2,11 +2,8 @@
   "name": "Dehante",
   "version": "1.0.0",
   "description": "an example script for whatsapp bot",
-  "main": "./script.js",
+  "main": "script.js",
   "directories": {
-    "lib": "./lib",
-    "scrap": "./scrap",
-    "json": "./json",
     "handler": "./handler"
   },
   "devDependencies": {},
