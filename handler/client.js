@@ -49,7 +49,7 @@ exports.connect = async () => {
 		console.log(color(_date));
 	});
 //------------------ FAKE THUMBNAIL ------------------//
-client.fakethumb = fs.readFileSync("./lib/dhn.jpeg");
+client.fakethumb = fs.readFileSync("./databases/dhn.jpeg");
 	
 /*
  * { Client send Reply }
