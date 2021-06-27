@@ -6,6 +6,48 @@ const util = require("util");
 const os = require("os");
 const axios = require("axios");
 const speed = require("performance-now");
+const {
+  BBCNews,
+  metroNews,
+  CNNNews,
+  iNews,
+  KumparanNews,
+  TribunNews,
+  DailyNews,
+  DetikNews,
+  OkezoneNews,
+  CNBCNews,
+  FajarNews,
+  KompasNews,
+  SindoNews,
+  TempoNews,
+  IndozoneNews,
+  AntaraNews,
+  RepublikaNews,
+  VivaNews,
+  KontanNews,
+  MerdekaNews,
+  KomikuSearch,
+  AniPlanetSearch,
+  KomikFoxSearch,
+  KomikStationSearch,
+  MangakuSearch,
+  KiryuuSearch,
+  KissMangaSearch,
+  KlikMangaSearch,
+  PalingMurah,
+  LayarKaca21,
+  AminoApps,
+  Mangatoon,
+  WAModsSearch,
+  Emojis,
+  CoronaInfo,
+  Cerpen,
+  Quotes,
+  Couples,
+  JalanTikusMeme,
+  Darkjokes
+} = require("dhn-api");
 //------------------ LIBRARY ------------------//
 const {
 	color,
@@ -166,39 +208,20 @@ const memnu = `•  My Info  •
 							break;
 					case 'komiku-search':
 						if (!q) return client.reply(from, 'Search?', msg);
-							Komiku_(q).then(async(res)=> {
-								buff = await getBuffer(res[0].image);
+							KomikuSearch(q).then(async(res)=> {
+								buff = await getBuffer(res[0].manga_thumb);
 								teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•";
-								teks += `\nManga: ${res[0].title}\n`;
-								teks += `Description: ${res[0].desc}\n`;
-								teks += `Chapter Pertama: ${res[0].chapter_pertama}\n`;
-								teks += `Chapter Terbaru: ${res[0].chapter_terbaru}\n`;
+								teks += `\nManga: ${res[0].manga}\n`;
+								teks += `Description: ${res[0].manga_desc}\n`;
+								teks += `Chapter Pertama: ${res[0].chapter.pertama}\n`;
+								teks += `Chapter Terbaru: ${res[0].chapter.terbaru}\n`;
 								teks += "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•";
 								client.sendImageCaption(from, buff, msg, teks);
 							});
 							break;
-					case 'mangaid-mangalist':
-						if (!q) return client.reply(from, 'page?', msg)
-							if (isNaN(q)) return client.reply("only number!")
-								MangaId_(q).then(async(result) => {
-									no = 0
-									for (let res of result) {
-										buff = await getBuffer(res.manga_thumb)
-										no += 1
-										teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
-										teks += `\n• Urutan: ${no.toString()} •\n`
-										teks += `Manga: ${res.manga_name}\n`
-										teks += `Manga Eps: ${res.manga_eps}\n`
-										teks += `Manga Views: ${res.manga_views}\n`
-										teks += `Manga Genre's: ${res.manga_genres}\n`
-										teks += "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
-										client.sendImageCaption(from, buff, msg, teks)
-									}
-								})
-								break
 					case 'mangaku-search':
 						if (!q) return client.reply(from, 'Search?', msg)
-							Mangakus_(q).then(async(res) => {
+							MangakuSearch(q).then(async(res) => {
 								buff = await getBuffer(res[0].manga_thumb)
 								teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
 								teks += `\nManga: ${res[0].manga_name}\n`
@@ -210,7 +233,7 @@ const memnu = `•  My Info  •
 							break
 					case 'klikmanga-search':
 						if (!q) return client.reply(from, 'Search?', msg)
-							KlikS_(q).then(async(res) => {
+							KlikMangaSearch(q).then(async(res) => {
 							no = 0
 							for (let i of res) {
 								no += 1
@@ -228,7 +251,7 @@ const memnu = `•  My Info  •
 							})
 							break
 					case 'cnn-news':
-						CNN_().then(res => {
+						CNNNews().then(res => {
 							no = 0
 							teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
 							for (let i of res) {
@@ -243,23 +266,22 @@ const memnu = `•  My Info  •
 						break
 						case 'layarkaca-search':
 							if (!q) return client.reply(from, "Film?", msg)
-							layarkaca_(q).then(async(res) => {
+							LayarKaca21(q).then(async(res) => {
 								no = 0
-								teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•\n"
+								teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
 								for (let i of res) {
-									no += 1
+								  no += 1
 									teks += `\n• ${no.toString()} •\n`
-									teks += `Film: ${i.title}\n`
-									teks += `Link: ${i.url}\n`
+									teks += `Film: ${i.film_title}\n`
+									teks += `Link: ${i.film_link}\n`
 								}
-								teks += `\n•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•`
-								teks += ""
+								teks += `•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•`
 								client.reply(from, teks, msg)
 							})
 							break
 						case 'palingmurah-search':
 							if (!q) return client.reply(from, 'vps?, rdp?', msg)
-							palingmurah_(q).then(async(res) => {
+							PalingMurah(q).then(async(res) => {
 								no = 0
 								for (let i of res) {
 									no += 1
@@ -269,15 +291,14 @@ const memnu = `•  My Info  •
 									teks += `Product: ${i.product}\n`
 									teks += `Description: ${i.product_desc}\n`
 									teks += `Price: ${i.price}\n`
-									teks += `Link: ${i.url}\n\n`
-									teks += `Seller: ${i.seller}\n`
+									teks += `Link: ${i.product_url}\n`
 									teks += "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
 									await client.sendImageCaption(from, buff, msg, teks)
 								}
 							})
 							break
 						case 'cnbc-news':
-							CNBC_().then(async(res) => {
+							CNBCNews().then(async(res) => {
 								buff = await getBuffer(res[0].berita_thumb)
 								no = 0
 								teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
@@ -292,28 +313,8 @@ const memnu = `•  My Info  •
 								client.sendImageCaption(from, buff, msg, teks)
 							})
 							break
-						case 'klik-mangalist':
-							if (!q) return client.reply(from, 'page?', msg)
-								if (isNaN(q)) return client.reply("only number!")
-									KlikML_(q).then(async(res) => {
-										no = 0
-										for (let i of res) {
-											buff = await getBuffer(i.manga_thumb)
-											no += 1
-											teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
-											teks += `\n• Urutan: ${no.toString()} •\n`
-											teks += `Manga: ${i.manga_name}\n`
-											teks += `Rating: ${i.manga_rating}\n`
-											teks += `Chapter:\n`
-											teks += `Terbaru: ${i.chapter_url.chapter_baru}\n`
-											teks += `Terlama: ${i.chapter_url.chapter_lama}\n`
-											teks += "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
-											client.sendImageCaption(from, buff, msg, teks)
-										}
-									})
-									break
 						case 'tribun-news':
-							Tribun_().then(async(res) => {
+							TribunNews().then(async(res) => {
 								buff = await getBuffer(res[0].berita_thumb)
 								no = 0
 								teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
@@ -330,7 +331,7 @@ const memnu = `•  My Info  •
 							})
 							break
 						case 'indozone-news':
-							Indozone_().then(async(res) => {
+							IndozoneNews().then(async(res) => {
 								buff = await getBuffer(res[0].berita_thumb)
 								no = 0
 								teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
@@ -347,7 +348,7 @@ const memnu = `•  My Info  •
 							})
 							break
 						case 'kumparan-news':
-							Kumparan_().then(async(res) => {
+							KumparanNews().then(async(res) => {
 								buff = await getBuffer(res[0].berita_thumb)
 								no = 0
 								teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
@@ -363,7 +364,7 @@ const memnu = `•  My Info  •
 							})
 							break
 						case 'kompas-news':
-							Kompas_().then(async(res) => {
+							KompasNews().then(async(res) => {
 								buff = await getBuffer(res[0].berita_thumb)
 								no = 0
 								teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
@@ -380,7 +381,7 @@ const memnu = `•  My Info  •
 							})
 							break
 						case 'detik-news':
-							DetikNews_().then(async(res) => {
+							DetikNews().then(async(res) => {
 								buff = await getBuffer(res[0].berita_thumb)
 								no = 0
 								teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
@@ -396,7 +397,7 @@ const memnu = `•  My Info  •
 							})
 							break
 						case 'daily-news':
-							DailyNews_().then(async(res) => {
+							DailyNews().then(async(res) => {
 								buff = await getBuffer(res[0].berita_thumb)
 								no = 0
 								teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
@@ -411,7 +412,7 @@ const memnu = `•  My Info  •
 							})
 							break
 						case 'metro-news':
-							metroTV_().then(async(res) => {
+							metroNews().then(async(res) => {
 								buff = await getBuffer(res[0].berita_thumb)
 								no = 0
 								teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
@@ -426,7 +427,7 @@ const memnu = `•  My Info  •
 							})
 							break
 						case 'inews-news':
-							iNewsTV_().then(async(res) => {
+							iNews().then(async(res) => {
 								buff = await getBuffer(res[0].berita_thumb)
 								no = 0
 								teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
@@ -443,7 +444,7 @@ const memnu = `•  My Info  •
 							})
 							break
 						case 'okezone-news':
-							Okezone_().then(async(res) => {
+							OkezoneNews().then(async(res) => {
 								buff = await getBuffer(res[0].berita_thumb)
 								no = 0
 								teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
@@ -452,7 +453,6 @@ const memnu = `•  My Info  •
 									teks += `\n• ${no.toString()} •\n`
 									teks += `Berita: ${i.berita}\n`
 									teks += `Upload: ${i.berita_diupload}\n`
-									teks += `Jenis: ${i.berita_jenis}\n`
 									teks += `Link: ${i.berita_url}\n`
 								}
 								teks += "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
@@ -460,7 +460,7 @@ const memnu = `•  My Info  •
 							})
 							break
 						case 'fajar-news':
-							KoranFajar_().then(async(res) => {
+							FajarNews().then(async(res) => {
 								buff = await getBuffer(res[0].berita_thumb)
 								no = 0
 								teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
@@ -477,7 +477,7 @@ const memnu = `•  My Info  •
 							})
 							break
 						case 'sindo-news':
-							KoranSindo_().then(async(res) => {
+							SindoNews().then(async(res) => {
 								buff = await getBuffer(res[0].berita_thumb)
 								no = 0
 								teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
@@ -485,7 +485,6 @@ const memnu = `•  My Info  •
 									no += 1
 									teks += `\n• ${no.toString()} •\n`
 									teks += `Berita: ${i.berita}\n`
-									teks += `Upload: ${i.berita_diupload}\n`
 									teks += `Jenis: ${i.berita_jenis}\n`
 									teks += `Link: ${i.berita_url}\n`
 								}
@@ -494,7 +493,7 @@ const memnu = `•  My Info  •
 							})
 							break
 						case 'tempo-news':
-							TempoNews_().then(async(res) => {
+							TempoNews().then(async(res) => {
 								buff = await getBuffer(res[0].berita_thumb)
 								no = 0
 								teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
@@ -503,24 +502,6 @@ const memnu = `•  My Info  •
 									teks += `\n• ${no.toString()} •\n`
 									teks += `Berita: ${i.berita}\n`
 									teks += `Upload: ${i.berita_diupload}\n`
-									teks += `Jenis: ${i.berita_jenis}\n`
-									teks += `Link: ${i.berita_url}\n`
-								}
-								teks += "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
-								client.sendImageCaption(from, buff, msg, teks)
-							})
-							break
-						case 'indozone-news':
-							Indozone_().then(async(res) => {
-								buff = await getBuffer(res[0].berita_thumb)
-								no = 0
-								teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
-								for (let i of res) {
-									no += 1
-									teks += `\n• ${no.toString()} •\n`
-									teks += `Berita: ${i.berita}\n`
-									teks += `Upload: ${i.berita_diupload}\n`
-									teks += `Jenis: ${i.berita_jenis}\n`
 									teks += `Link: ${i.berita_url}\n`
 								}
 								teks += "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
@@ -528,7 +509,7 @@ const memnu = `•  My Info  •
 							})
 							break
 						case 'antara-news':
-							AntaraNews_().then(async(res) => {
+							AntaraNews().then(async(res) => {
 								buff = await getBuffer(res[0].berita_thumb)
 								no = 0
 								teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
@@ -545,7 +526,7 @@ const memnu = `•  My Info  •
 							})
 							break
 						case 'republika-news':
-							Republika_().then(async(res) => {
+							RepublikaNews().then(async(res) => {
 								buff = await getBuffer(res[0].berita_thumb)
 								no = 0
 								teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
@@ -563,7 +544,7 @@ const memnu = `•  My Info  •
 							break
 						case 'animeplanet-search':
 							if (!q) return client.reply(from, 'Search?', msg)
-							AnimePlanet_(q).then(async(res) => {
+							AniPlanetSearch(q).then(async(res) => {
 								no = 0
 								for (let i of res) {
 									no += 1
@@ -579,7 +560,7 @@ const memnu = `•  My Info  •
 							break
 						case 'komikfox-search':
 							if (!q) return client.reply(from, 'Search?', msg)
-							KomikFox_(q).then(async(res) => {
+							KomikFoxSearch(q).then(async(res) => {
 								no = 0
 								teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
 								for (let i of res) {
@@ -593,29 +574,9 @@ const memnu = `•  My Info  •
 								client.reply(from, teks, msg)
 							})
 							break
-						case 'komikstation-mangalist':
-							if (!q) return client.reply(from, 'page?', msg)
-							if (isNaN(q)) return client.reply("only number!")
-							komikstationlist_(q).then(async(res) => {
-								no = 0
-								for (let i of res) {
-									no += 1
-									buff = await getBuffer(i.manga_thumb)
-									teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
-									teks += `\n• Urutan: ${no.toString()} •\n`
-									teks += `Manga: ${i.manga_name}\n`
-									teks += `Rating: ${i.manga_rating}\n`
-									teks += `Chapter: ${i.manga_eps}\n`
-									teks += `Type: ${i.manga_type}\n`
-									teks += `Link: ${i.manga_url}\n`
-									teks += "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
-									client.sendImageCaption(from, buff, msg, teks)
-								}
-							})
-							break
 						case 'komikstation-search':
 							if (!q) return client.reply(from, 'Search?', msg)
-							KomikStation_(q).then(async(res) => {
+							KomikStationSearch(q).then(async(res) => {
 								no = 0
 								for (let i of res) {
 									no += 1
@@ -632,7 +593,7 @@ const memnu = `•  My Info  •
 							break
 						case 'kiryuu-search':
 							if (!q) return client.reply(from, 'Search?', msg)
-							Kiryuus_(q).then(async(res) => {
+							KiryuuSearch(q).then(async(res) => {
 								no = 0
 								for (let i of res) {
 									no += 1
@@ -648,66 +609,9 @@ const memnu = `•  My Info  •
 								}
 							})
 							break
-						case 'kiryuu-latest':
-							if (!q) return client.reply(from, 'page?', msg)
-							if (isNaN(q)) return client.reply("only number!")
-							KiryuuL_(q).then(async(res) => {
-								no = 0
-								for (let i of res) {
-									no += 1
-									buff = await getBuffer(i.manga_thumb)
-									teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
-									teks += `\n• Urutan: ${no.toString()} •\n`
-									teks += `Manga: ${i.manga_name}\n`
-									teks += `Rating: ${i.manga_rating}\n`
-									teks += `Chapter: ${i.manga_eps}\n`
-									teks += `Link: ${i.manga_url}\n`
-									teks += "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
-									client.sendImageCaption(from, buff, msg, teks)
-								}
-							})
-							break
-						case 'kiryuu-mangasoon':
-							if (!q) return client.reply(from, 'page?', msg)
-							if (isNaN(q)) return client.reply("only number!")
-							KiryuuC_(q).then(async(res) => {
-								no = 0
-								for (let i of res) {
-									no += 1
-									buff = await getBuffer(i.manga_thumb)
-									teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
-									teks += `\n• Urutan: ${no.toString()} •\n`
-									teks += `Manga: ${i.manga_name}\n`
-									teks += `Rating: ${i.manga_rating}\n`
-									teks += `Chapter: ${i.manga_eps}\n`
-									teks += `Link: ${i.manga_url}\n`
-									teks += "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
-									client.sendImageCaption(from, buff, msg, teks)
-								}
-							})
-							break
-						case 'kiss-mangalist':
-							if (!q) return client.reply(from, 'page?', msg)
-							if (isNaN(q)) return client.reply("only number!")
-							KissL_(q).then(async(res)=>{
-								no = 0
-								teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
-								for (let i of res) {
-									no += 1
-									teks += `\n• Urutan: ${no.toString()} •\n`
-									teks += `Manga: ${i.manga_name}\n`
-									teks += `Link: ${i.manga_url}\n`
-									teks += `Chapter: \n`
-									teks += `Desc: ${i.chapter.chapter_desc}\n`
-									teks += `Ch Link: ${i.chapter.chapter_url}\n`
-								}
-								teks += "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
-								client.reply(from, teks, msg)
-							})
-							break
-						case 'kiss-search':
+						case 'kissmanga-search':
 							if (!q) return client.reply(from, 'Search?', msg)
-							KissM_(q).then(async(res)=>{
+							KissMangaSearch(q).then(async(res)=>{
 								no = 0
 								teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
 								for (let i of res) {
@@ -720,24 +624,140 @@ const memnu = `•  My Info  •
 								client.reply(from, teks, msg)
 							})
 							break
-						case 'amino-search':
+						case 'aminoapps-search':
 							if (!q) return client.reply(from, 'Search?', msg)
-							Amino_(q).then(async(res) => {
+							AminoApps(q).then(res => {
 								no = 0
 								teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
 								for (let i of res) {
 									no += 1
 									teks += `\n• ${no.toString()} •\n`
-									teks += `Community: ${i.title}\n`
-									teks += `Desc: ${i.desc}\n`
-									teks += `Link: ${i.url}\n`
+									teks += `Community: ${i.community}\n`
+									teks += `Desc: ${i.community_desc}\n`
+									teks += `Link: ${i.community_link}\n`
 								}
 								teks += "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
 								client.reply(from, teks, msg)
 							})
 							break
+						case "mangatoon-search":
+						  if (!q) return client.reply(from, "Search?", msg)
+						  Mangatoon(q).then(async (res) => {
+						    no = 0
+						    for (let i of res) {
+						      buff = await getBuffer(i.comic_thumb)
+						      no += 1
+						      teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
+						      teks += `\n• Urutan: ${no.toString()} •\n`
+						      teks += `Comic: ${i.comic_name}\n`
+						      teks += `Type: ${i.comic_type}\n`
+						      teks += `Link: ${i.comic_url}\n`
+						      teks += "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
+						      client.sendImageCaption(from, buff, msg, teks)
+						    }
+						  })
+						  break
+						case "viva-news":
+						  VivaNews().then(async (res) => {
+						    buff = await getBuffer(res[0].berita_thumb)
+						    teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
+						    no = 0
+						    for (let i of res) {
+						      no += 1
+						      teks += `\n• ${no.toString()} •\n`
+						      teks += `Berita: ${i.berita}\n`
+						      teks += `Jenis: ${i.berita_jenis}\n`
+						      teks += `Upload: ${i.berita_diupload}\n`
+						      teks += `Link: ${i.berita_url}\n`
+						    }
+						    teks += "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
+						    client.sendImageCaption(from, buff, msg, teks)
+						  })
+						  break
+						case "kontan-news":
+						  KontanNews().then(async (res) => {
+						    buff = await getBuffer(res[0].berita_thumb)
+						    teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
+						    no = 0
+						    for (let i of res) {
+						      no += 1
+						      teks += `\n• ${no.toString()} •\n`
+						      teks += `Berita: ${i.berita}\n`
+						      teks += `Jenis: ${i.berita_jenis}\n`
+						      teks += `Upload: ${i.berita_diupload}\n`
+						      teks += `Link: ${i.berita_url}\n`
+						    }
+						    teks += "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
+						    client.sendImageCaption(from, buff, msg, teks)
+						  })
+						  break
+						case "merdeka-news":
+						  MerdekaNews().then(async (res) => {
+						    buff = await getBuffer(res[0].berita_thumb)
+						    teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
+						    no = 0
+						    for (let i of res) {
+						      no += 1
+						      teks += `\n• ${no.toString()} •\n`
+						      teks += `Berita: ${i.berita}\n`
+						      teks += `Upload: ${i.berita_diupload}\n`
+						      teks += `Link: ${i.berita_url}\n`
+						    }
+						    teks += "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
+						    client.sendImageCaption(from, buff, msg, teks)
+						  })
+						  break
+						case "wamods-search":
+						  if (!q) return client.reply(from, "Search?", msg)
+						  WAModsSearch(q).then(async (res) => {
+						    no = 0
+						    for (let i of res) {
+						      no += 1
+						      buff = await getBuffer(i.apk_image)
+						      teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
+						      teks += `\n• Urutan: ${no.toString()} •\n`
+						      teks += `Apk: ${i.apk_name}\n`
+						      teks += "Description:\n"
+						      teks += `${i.apk_desc}\n`
+						      teks += `Link: ${i.apk_url}\n`
+						      teks += "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
+						      client.sendImageCaption(from, buff, msg, teks)
+						    }
+						  })
+						  break
+						case "emoji-image":
+						  if (!q) return client.reply(from, "Search?", msg)
+						  Emojis(q).then(async (res) => {
+						    no = 0
+						    for (let i of res.unicode_pack) {
+						      buff = await getBuffer(i.vendor_thumb)
+						      no += 1
+						      teks = "Unicode Description:\n"
+						      teks += `${res.unicode_desc}\n`
+						      teks += "\n•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
+						      teks += `\n• List: ${no.toString()} •\n`
+						      teks += `Vendor: ${i.vendor_name}\n`
+						      teks += "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
+						      client.sendImageCaption(from, buff, msg, teks)
+						    }
+						  })
+						  break
+						case "coronainfo":
+						  if (!q) return client.reply(from, "Negara?", msg)
+						  CoronaInfo(q).then(res => {
+						    teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
+						    teks += `\nNegara: ${res.negara}\n`
+						    teks += `Informasi: ${res.informasi}\n`
+						    teks += `Total Kasus: ${res.total_kasus}\n`
+						    teks += `Total Kematian: ${res.total_kematian}\n`
+						    teks += `Total Sembuh: ${res.total_sembuh}\n`
+						    teks += `Link: ${res.informasi_lengkap}\n`
+						    teks += "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
+						    client.reply(from, teks, msg)
+						  })
+						  break
 						case "quotes":
-							var res = randomJson(quotes)
+							var res = await Quotes()
 							teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
 							teks += `\nAuthor: ${res.author}\n`
 							teks += `\nQuotes:\n`
@@ -746,15 +766,15 @@ const memnu = `•  My Info  •
 							client.reply(from, teks, msg)
 							break
 						case "cerpen":
-							var res = randomJson(cerpen)
+						  var res = await Cerpen()
 							teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
-							teks += "\nCerpen:\n"
+							teks += "\nCerpen:\n\n"
 							teks += res + "\n"
 							teks += "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
 							client.reply(from, teks, msg)
 							break
 						case "couple":
-							var res = randomJson(couple)
+							var res = await Couples()
 							female = await getBuffer(res.female)
 							male = await getBuffer(res.male)
 							teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
@@ -764,10 +784,10 @@ const memnu = `•  My Info  •
 							teks += `\nFemale Source: ${res.female}\n`
 							teks += "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
 							male = await client.sendImageCaption(from, male, msg, teks)
-							client.sendMessage(from, female, male, teks)
+							client.sendImageCaption(from, female, male, teks)
 							break
 						case "darkjoke":
-							var res = randomJson(darkjoke)
+							var res = await Darkjokes()
 							buff = await getBuffer(res)
 							teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
 							teks += "\nDarkjokes?\n"
@@ -775,7 +795,7 @@ const memnu = `•  My Info  •
 							client.sendImageCaption(from, buff, msg, teks)
 							break
 						case "jalantikus-meme":
-							var res = randomJson(JTmeme)
+						  var res = await JalanTikusMeme()
 							buff = await getBuffer(res)
 							teks = "•°•°•°•°•°•°•°•°••°•°•°•°•°•°•°•°•"
 							teks += "\nNgakak?\n"
