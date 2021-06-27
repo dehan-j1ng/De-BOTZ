@@ -9,7 +9,7 @@ const _date = moment().format('LLLL');
 //------------------ LIBRARY ------------------//
 const {
   color
-} = require("../lib/databases.js");
+} = require("./databases.js");
 //------------------ HANDLER ------------------//
 const client = new WAConnection();
 exports.client = client;
